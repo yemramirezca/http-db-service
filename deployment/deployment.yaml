@@ -48,6 +48,6 @@ spec:
         env:
         - name: dbtype
           # available dbtypes are: [memory, mssql, cloudsqlpostgres]
-          value: "memory"
+          value: "postgres"
 
 
