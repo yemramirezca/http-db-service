@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	insertQuery   = "INSERT INTO %s (order_id, namespace, total) VALUES (?, ?, ?)"
+	insertQuery   = "INSERT INTO %s (order_id, namespace, total) VALUES ($1, $2, $3)"
 	getQuery      = "SELECT * FROM %s"
 	getNSQuery    = "SELECT * FROM %s WHERE namespace = ?"
 	deleteQuery   = "DELETE FROM %s"
@@ -44,6 +44,7 @@ func (repository *OrderRepositorySQL) InsertOrder(order Order) error {
 	q := fmt.Sprintf(insertQuery, SanitizeSQLArg(repository.OrdersTableName))
 	log.Debugf("Running insert order query: '%q'.", q)
 	_, err := repository.Database.Exec(q, order.OrderId, order.Namespace, order.Total)
+
 
 	if errorWithNumber, ok := err.(sqlError); ok {
 		if errorWithNumber.sqlErrorNumber() == PrimaryKeyViolation {

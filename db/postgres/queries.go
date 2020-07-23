@@ -5,14 +5,13 @@ import "regexp"
 const (
 
   postgresTableCreationQuery = `
-BEGIN
-    CREATE TABLE {name} (
+    CREATE TABLE IF NOT EXISTS {name} (
       order_id VARCHAR(64),
       namespace VARCHAR(64),
       total DECIMAL(8,2),
       PRIMARY KEY (order_id, namespace)
     )
-END`
+`
 )
 
 var safeSQLRegex = regexp.MustCompile(`[^a-zA-Z0-9\.\-_]`)

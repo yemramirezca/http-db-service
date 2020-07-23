@@ -3,7 +3,7 @@ package postgres
 import (
 	"database/sql"
 	"fmt"
-	_ "github.com/GoogleCloudPlatform/cloudsql-proxy/proxy/dialers/postgres"
+	_ "github.com/lib/pq"
 	log "github.com/Sirupsen/logrus"
 	"github.com/pkg/errors"
 	"github.com/yemramirezca/http-db-service/config"

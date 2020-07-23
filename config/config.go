@@ -11,7 +11,7 @@ const (
 	// SQLServerDriverName value can be used to start the service using an external MsSql DB. See Service/DbType.
 	SQLServerDriverName = "mssql"
 	// PostgresDriverName value
-	PostgresDriverName = "cloudsqlpostgres"
+	PostgresDriverName = "postgres"
 )
 
 // Config is a struct used for configuring the connection and the usage of the database.
