@@ -8,7 +8,6 @@ import (
 
 	_ "github.com/lib/pq"
 	"github.com/stretchr/testify/assert"
-	dbPkg "github.com/kyma-project/examples/http-db-service/internal/mssqldb"
 )
 
 var newOrder = Order{OrderId: "orderId1", Namespace: "N7", Total: 10}
@@ -21,7 +20,7 @@ const (
 
 func TestDbCreateSuccess(t *testing.T) {
 	databaseMock := mockDbQuerier{}
-	repo := orderRepositorySQL{&databaseMock, "tableName"}
+	repo := OrderRepositorySQL{&databaseMock, "tableName"}
 
 	databaseMock.On("Exec", parsedInsert, newOrder.OrderId, newOrder.Namespace, newOrder.Total).Return((sql.Result)(nil), nil)
 	//when
@@ -32,12 +31,12 @@ func TestDbCreateSuccess(t *testing.T) {
 
 type primaryKeyViolationError struct{error}
 func (e primaryKeyViolationError) sqlErrorNumber() int32 {
-	return dbPkg.PrimaryKeyViolation
+	return PrimaryKeyViolation
 }
 
 func TestDbCreateDuplicate(t *testing.T) {
 	databaseMock := mockDbQuerier{}
-	repo := orderRepositorySQL{&databaseMock, "tableName"}
+	repo := OrderRepositorySQL{&databaseMock, "tableName"}
 
 	databaseMock.On("Exec", parsedInsert, newOrder.OrderId, newOrder.Namespace, newOrder.Total).
 		Return((sql.Result)(nil), primaryKeyViolationError{})
@@ -53,7 +52,7 @@ func (e otherSQLError) SQLErrorNumber() int32 {
 }
 func TestDbRepositoryCreateOtherSqlError(t *testing.T) {
 	databaseMock := mockDbQuerier{}
-	repo := orderRepositorySQL{&databaseMock, "tableName"}
+	repo := OrderRepositorySQL{&databaseMock, "tableName"}
 
 	databaseMock.On("Exec", parsedInsert, newOrder.OrderId, newOrder.Namespace, newOrder.Total).
 		Return((sql.Result)(nil), otherSQLError{})
@@ -65,7 +64,7 @@ func TestDbRepositoryCreateOtherSqlError(t *testing.T) {
 
 func TestDbCreateError(t *testing.T) {
 	databaseMock := mockDbQuerier{}
-	repo := orderRepositorySQL{&databaseMock, "tableName"}
+	repo := OrderRepositorySQL{&databaseMock, "tableName"}
 
 	databaseMock.On("Exec", parsedInsert, newOrder.OrderId, newOrder.Namespace, newOrder.Total).Return((sql.Result)(nil), errors.New("unexpected error"))
 	//when
@@ -76,7 +75,7 @@ func TestDbCreateError(t *testing.T) {
 
 func TestDbGetError(t *testing.T) {
 	databaseMock := mockDbQuerier{}
-	repo := orderRepositorySQL{&databaseMock, "tableName"}
+	repo := OrderRepositorySQL{&databaseMock, "tableName"}
 
 	databaseMock.On("Query", parsedGet).Return(&sql.Rows{}, errors.New("unexpected error"))
 	//when
@@ -87,7 +86,7 @@ func TestDbGetError(t *testing.T) {
 
 func TestDeleteOrders(t *testing.T) {
 	databaseMock := mockDbQuerier{}
-	repo := orderRepositorySQL{&databaseMock, "tableName"}
+	repo := OrderRepositorySQL{&databaseMock, "tableName"}
 	databaseMock.On("Exec", parsedDelete).Return((sql.Result)(nil), nil)
 
 	//when

@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	responseObj "github.com/kyma-project/examples/http-db-service/handler/response"
+	responseObj "github.com/yemramirezca/http-db-service/handler/response"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -16,7 +16,7 @@ import (
 
 	"io/ioutil"
 
-	"github.com/kyma-project/examples/http-db-service/internal/repository"
+	"github.com/yemramirezca/http-db-service/db/repository"
 )
 
 func TestCreateOrderSuccess(t *testing.T) {

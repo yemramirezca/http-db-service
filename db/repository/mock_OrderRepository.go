@@ -8,8 +8,8 @@ type MockOrderRepository struct {
 	mock.Mock
 }
 
-// cleanUp provides a mock function with given fields:
-func (_m *MockOrderRepository) cleanUp() error {
+// CleanUp provides a mock function with given fields:
+func (_m *MockOrderRepository) CleanUp() error {
 	ret := _m.Called()
 
 	var r0 error

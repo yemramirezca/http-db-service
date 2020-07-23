@@ -1,7 +1,10 @@
 package main
 
 import (
-	"github.com/kyma-project/examples/http-db-service/handler/events"
+	"github.com/pkg/errors"
+	"github.com/yemramirezca/http-db-service/db/mssqldb"
+	"github.com/yemramirezca/http-db-service/db/postgres"
+	"github.com/yemramirezca/http-db-service/handler/events"
 	"log"
 	"net/http"
 
@@ -9,9 +12,9 @@ import (
 	"github.com/rs/cors"
 	"github.com/vrischmann/envconfig"
 
-	"github.com/kyma-project/examples/http-db-service/config"
-	"github.com/kyma-project/examples/http-db-service/handler"
-	"github.com/kyma-project/examples/http-db-service/internal/repository"
+	"github.com/yemramirezca/http-db-service/config"
+	"github.com/yemramirezca/http-db-service/handler"
+	"github.com/yemramirezca/http-db-service/db/repository"
 
 	_ "github.com/lib/pq"
 )
@@ -38,7 +41,7 @@ func main() {
 
 func addOrderHandlers(router *mux.Router, dbType string) {
 
-	repo, err := repository.Create(dbType)
+	repo, err := Create(dbType)
 	if err != nil {
 		log.Fatal("Unable to initiate repository", err)
 	}
@@ -71,4 +74,31 @@ func startService(port string, router *mux.Router) error {
 
 	c := cors.AllowAll()
 	return http.ListenAndServe(":"+port, c.Handler(router))
+}
+
+
+// Create is used to create an OrderRepository based on the given dbtype.
+// Currently the `MemoryDatabase` and `SQLServerDriverName` are supported.
+func Create(dbtype string) (repository.OrderRepository, error) {
+
+	var (
+		dbCfg config.Config
+		err error
+	)
+	if err = envconfig.Init(&dbCfg); err != nil {
+		return nil, errors.Wrap(err, "Error loading db configuration %v.")
+	}
+
+	switch dbtype {
+	case config.MemoryDatabase:
+		return repository.NewOrderRepositoryMemory(), nil
+	case config.SQLServerDriverName:
+		mssql := mssqldb.Mssql{dbCfg}
+		return mssql.NewOrderRepositoryDb()
+	case config.PostgresDriverName:
+		postgresDB := postgres.Postgres{dbCfg}
+		return postgresDB.NewOrderRepositoryDb()
+	default:
+		return nil, errors.Errorf("Unsupported database type %s", dbtype)
+	}
 }

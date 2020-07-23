@@ -45,7 +45,7 @@ func (repository *orderRepositoryMemory) DeleteOrders() error {
 	return nil
 }
 
-func (repository *orderRepositoryMemory) cleanUp() error {
+func (repository *orderRepositoryMemory) CleanUp() error {
 	repository.Orders = make(map[string]Order)
 	return nil
 }

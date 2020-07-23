@@ -3,14 +3,14 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/kyma-project/examples/http-db-service/handler/response"
+	"github.com/yemramirezca/http-db-service/handler/response"
 	"io/ioutil"
 	"net/http"
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/gorilla/mux"
 
-	"github.com/kyma-project/examples/http-db-service/internal/repository"
+	"github.com/yemramirezca/http-db-service/db/repository"
 )
 
 const defaultNamespace = "default"

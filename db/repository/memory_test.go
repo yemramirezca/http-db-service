@@ -17,7 +17,7 @@ func TestMemoryCreateAndGet(t *testing.T) {
 	err := repo.InsertOrder(newOrder)
 
 	if err != nil {
-		t.Fatalf("Could not access database. '%s'", err)
+		t.Fatalf("Could not access Database. '%s'", err)
 	}
 
 	resultOrders, err := repo.GetOrders()

@@ -18,7 +18,7 @@ type OrderRepository interface {
 	GetNamespaceOrders(ns string) ([]Order, error)
 	DeleteOrders() error
 	DeleteNamespaceOrders(ns string) error
-	cleanUp() error
+	CleanUp() error
 }
 
 // ErrDuplicateKey is thrown when there is an attempt to create an order with an OrderId which already is used.

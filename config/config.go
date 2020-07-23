@@ -1,8 +1,17 @@
-package mssqldb
+package config
 
 import (
 	"encoding/json"
 	"fmt"
+)
+
+const (
+	// MemoryDatabase value can be used to start the service using an in-memory DB. See Service/DbType.
+	MemoryDatabase      = "memory"
+	// SQLServerDriverName value can be used to start the service using an external MsSql DB. See Service/DbType.
+	SQLServerDriverName = "mssql"
+	// PostgresDriverName value
+	PostgresDriverName = "cloudsqlpostgres"
 )
 
 // Config is a struct used for configuring the connection and the usage of the database.

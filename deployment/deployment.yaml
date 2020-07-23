@@ -34,7 +34,7 @@ spec:
     spec:
       containers:
       # replace the repository URL with your own repository (e.g. {DockerID}/http-db-service:0.0.x for Docker Hub).
-      - image: eu.gcr.io/kyma-project/develop/http-db-service:47d43e19
+      - image: yemramirezca/http-db-service:latest
         imagePullPolicy: IfNotPresent
         name: http-db-service
         ports:
@@ -47,7 +47,7 @@ spec:
             memory: 32Mi
         env:
         - name: dbtype
-          # available dbtypes are: [memory, mssql]
+          # available dbtypes are: [memory, mssql, cloudsqlpostgres]
           value: "memory"
 
 

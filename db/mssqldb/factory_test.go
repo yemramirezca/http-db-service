@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 	"testing"
-
+	"github.com/yemramirezca/http-db-service/config"
 	_ "github.com/lib/pq"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -17,10 +17,11 @@ func TestFactory(t *testing.T) {
 		t.Skip("skipping test; DB Config not set")
 	}
 
-	var dbCfg Config
+	var dbCfg config.Config
 	assert.NoError(t, envconfig.Init(&dbCfg))
+	mssql := Mssql{dbCfg}
 	// when initiating
-	db, err := InitDb(dbCfg)
+	db, err := mssql.InitDb()
 	require.NoError(t, err)
 	defer db.Close()
 

@@ -1,6 +1,7 @@
-package repository
+package main
 
 import (
+	"github.com/yemramirezca/http-db-service/db/repository"
 	"testing"
 	"os"
 
@@ -24,7 +25,7 @@ func runTestsForRepoType(repositoryType string, t *testing.T) {
 	repo, err := Create(repositoryType)
 	require.NoError(t, err)
 
-	newOrder := Order{OrderId: "orderId1", Namespace: "N7", Total: 10}
+	newOrder := repository.Order{OrderId: "orderId1", Namespace: "N7", Total: 10}
 
 	t.Run("Create and get Order", func(t *testing.T) {
 		//when
@@ -52,13 +53,13 @@ func runTestsForRepoType(repositoryType string, t *testing.T) {
 		err := repo.InsertOrder(newOrder)
 
 		//then
-		assert.Equal(t, ErrDuplicateKey, err)
+		assert.Equal(t, repository.ErrDuplicateKey, err)
 	})
 
 	t.Run("Create orders in different namespaces", func(t *testing.T) {
 		//when
-		o1 := Order{OrderId: "orderId1", Namespace: "N8", Total: 10}
-		o2 := Order{OrderId: "orderId1", Namespace: "N9", Total: 10}
+		o1 := repository.Order{OrderId: "orderId1", Namespace: "N8", Total: 10}
+		o2 := repository.Order{OrderId: "orderId1", Namespace: "N9", Total: 10}
 		err := repo.InsertOrder(o1)
 		assert.NoError(t, err)
 		err = repo.InsertOrder(o2)
@@ -107,5 +108,5 @@ func runTestsForRepoType(repositoryType string, t *testing.T) {
 		assert.Len(t, resultOrders, 0)
 	})
 
-	repo.cleanUp()
+	repo.CleanUp()
 }

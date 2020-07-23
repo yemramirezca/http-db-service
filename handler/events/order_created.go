@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	log "github.com/Sirupsen/logrus"
-	"github.com/kyma-project/examples/http-db-service/handler/response"
-	"github.com/kyma-project/examples/http-db-service/internal/repository"
+	"github.com/yemramirezca/http-db-service/handler/response"
+	"github.com/yemramirezca/http-db-service/db/repository"
 	"io/ioutil"
 	"net/http"
 )
