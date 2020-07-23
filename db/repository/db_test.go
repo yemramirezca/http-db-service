@@ -13,7 +13,7 @@ import (
 var newOrder = Order{OrderId: "orderId1", Namespace: "N7", Total: 10}
 
 const (
-	parsedInsert = "INSERT INTO tableName (order_id, namespace, total) VALUES (?, ?, ?)"
+	parsedInsert = "INSERT INTO tableName (order_id, namespace, total) VALUES ($1, $2, $3)"
 	parsedGet    = "SELECT * FROM tableName"
 	parsedDelete = "DELETE FROM tableName"
 )
