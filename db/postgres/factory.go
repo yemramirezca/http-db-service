@@ -47,7 +47,7 @@ func (ds *Postgres)InitDb() (*sql.DB, error) {
 	if err := db.Ping(); err != nil {
 		return nil, errors.Wrap(err, "while testing DB connection")
 	}
-	q := strings.Replace(postgresTableCreationQuery, "{name}", SanitizeSQLArg(ds.DBCfg.DbOrdersTableName), -1)
+	q := strings.Replace(PostgresTableCreationQuery, "{name}", SanitizeSQLArg(ds.DBCfg.DbOrdersTableName), -1)
 	log.Debugf("Ensuring table exists. Running query: '%q'.", q)
 	if _, err := db.Exec(q); err != nil {
 		return nil, errors.Wrap(err, "while initiating DB table")

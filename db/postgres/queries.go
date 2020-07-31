@@ -4,7 +4,7 @@ import "regexp"
 
 const (
 
-  postgresTableCreationQuery = `
+  PostgresTableCreationQuery = `
     CREATE TABLE IF NOT EXISTS {name} (
       order_id VARCHAR(64),
       namespace VARCHAR(64),
