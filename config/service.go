@@ -9,9 +9,9 @@ import (
 // by reading the values from the environment or using the default values.
 type Service struct {
 	Port   string `envconfig:"serviceport,default=8017" json:"Port"`
-	DBConnection1	string `envconfig:"db-connection1`
-	DBConnection2	string `envconfig:"db-connection2`
-	SwitchHeader	string `envconfig:"header-val,default=jason"`
+	DBConnection1	string `envconfig:"dbconnection1`
+	DBConnection2	string `envconfig:"dbconnection2`
+	SwitchHeader	string `envconfig:"headerval,default=jason"`
 }
 
 // String returns a printable representation of the config as JSON.

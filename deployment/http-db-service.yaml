@@ -46,9 +46,9 @@ spec:
           requests:
             memory: 32Mi
         env:
-        - name: db-connection1
+        - name: dbconnection1
           value: ""
-        - name: db-connection2
+        - name: dbconnection2
           value: ""
-        - name: header-val
-          value: ""
+        - name: headerval
+          value: "jason"
