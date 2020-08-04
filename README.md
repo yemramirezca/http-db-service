@@ -2,25 +2,25 @@
 
 ## Overview
 
-This example demonstrates Kyma capabilities, such as HTTP endpoints that expose and bind a service to a database. The service in this example exposes HTTP endpoints used to create and read basic order JSON entities, as described in the [service's API descriptor](docs/api/api.yaml). The service can run with either an in-memory database or an MSSQL instance. By default, the in-memory database is enabled. The service in this example uses [Go](http://golang.org).
+This example demonstrates nd multi instance routing using Kyma capabilities, such as HTTP endpoints that expose and bind a service to a database. The service in this example exposes HTTP endpoints used to create and read basic order JSON entities, as described in the [service's API descriptor](docs/api/api.yaml). The service can run with a database Postgres instance.  The service in this example uses [Go](http://golang.org).
 
 ## Prerequisites
 
 - A [Docker](https://docs.docker.com/install) installation.
 - Kyma as the target deployment environment.
-- An MSSQL database for the service's database functionality. You can also use Azure MSSQL that you can provision using the Kyma Open Service Broker API.
-- [Golang](https://golang.org/dl/) and [dep](https://github.com/golang/dep) installed.
+- An Postgres database for the service's database functionality.
+- [Golang](https://golang.org/dl/) 
 
 ## Installation
 
 Use these commands to build and run the service with Docker:
 
 ```
-./build.sh
+docker build -t http-db-service:latest .
 docker run -it --rm -p 8017:8017 http-db-service:latest
 ```
 
-To run the service with an MSSQL database, use the **DbType=mssql** environment variable in the application. To configure the connection to the database, set the environment variables for the values defined in the `config/db.go` file.
+To configure the connection to the database, set the environment variables for the values defined in the `config/service.go` file.
 
 The `deployment` folder contains `.yaml` descriptors used for the deployment of the service to Kyma.
 
@@ -34,24 +34,14 @@ Run the following commands to deploy the published service to Kyma:
 2. Deploy the service:
     ```bash
     kubectl create namespace $KYMA_EXAMPLE_NS
-    kubectl apply -f deployment/deployment.yaml -n $KYMA_EXAMPLE_NS
+    kubectl apply -f deployment/http-db-service.yaml -n $KYMA_EXAMPLE_NS
+    kubectl apply -f deployment/postgres-binding-usage.yaml -n $KYMA_EXAMPLE_NS
     ```
 
-### MSSQL Database tests
+### Tests
+Perform a request against ```$CLUSTER-DOMAIN/orders``` and set the header ```end-user``` 
+See how the service uses a different database depending on the end-user
 
-To run the unit tests on a real MSSQL database, run the following command on the root of the example:
-
-```bash
-docker run -ti -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=Password!123' -p 1433:1433 -d microsoft/mssql-server-linux:2017-latest
-```
-
-The command starts a MSSQL database in a container.
-
-```bash
-username=sa password='Password!123' database=master tablename='test_orders' host=localhost port=1433 dbtype=mssql go test ./... -v
-```
-
-The command runs the specific unit tests for MSSQL databases with the environment information to connect to the previously started MSSQL database.
 
 ### Cleanup
 

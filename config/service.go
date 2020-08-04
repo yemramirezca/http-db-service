@@ -9,9 +9,9 @@ import (
 // by reading the values from the environment or using the default values.
 type Service struct {
 	Port   string `envconfig:"serviceport,default=8017" json:"Port"`
-	// DbType set to 'mssql' will start the service using an MsSql datbase
-	// and it will require extra configuration. See https://github.com/kyma-project/examples/blob/master/http-db-service/internal/mssqldb/config.go
-	DbType string `envconfig:"dbtype,default=memory" json:"DBType"` // [memory | mssql]
+	DBConnection1	string `envconfig:"db-connection1`
+	DBConnection2	string `envconfig:"db-connection2`
+	SwitchHeader	string `envconfig:"header-val,default=jason"`
 }
 
 // String returns a printable representation of the config as JSON.

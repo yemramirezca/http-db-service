@@ -26,7 +26,7 @@ func main() {
 
 	router := mux.NewRouter().StrictSlash(true)
 
-	addOrderHandlers(router, cfg.DbType)
+	addOrderHandlers(router, cfg)
 	addEventsHandler(router)
 	addAPIHandler(router)
 
@@ -35,23 +35,24 @@ func main() {
 	}
 }
 
-func addOrderHandlers(router *mux.Router, dbType string) {
+func addOrderHandlers(router *mux.Router, cfg config.Service) {
 
 	/*repo, err := Create(dbType)
 	if err != nil {
 		log.Fatal("Unable to initiate repository", err)
-	}
+	}*/
 
-	//orderHandler := handler.NewOrderHandler(repo)*/
+
+	orderHandler := handler.NewOrderHandler(cfg)
 
 	// orders
-	router.HandleFunc("/orders", r.InsertOrder).Methods(http.MethodPost)
+	router.HandleFunc("/orders", orderHandler.InsertOrder).Methods(http.MethodPost)
 
-	router.HandleFunc("/orders", r.GetOrders).Methods(http.MethodGet)
+	router.HandleFunc("/orders", orderHandler.GetOrders).Methods(http.MethodGet)
 	router.HandleFunc("/namespace/{namespace}/orders", r.GetNamespaceOrders).Methods(http.MethodGet)
 
-	router.HandleFunc("/orders", r.DeleteOrders).Methods(http.MethodDelete)
-	router.HandleFunc("/namespace/{namespace}/orders", r.DeleteNamespaceOrders).Methods(http.MethodDelete)
+	router.HandleFunc("/orders", orderHandler.DeleteOrders).Methods(http.MethodDelete)
+	router.HandleFunc("/namespace/{namespace}/orders", orderHandler.DeleteNamespaceOrders).Methods(http.MethodDelete)
 }
 
 func addEventsHandler(router *mux.Router) {

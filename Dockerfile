@@ -4,7 +4,7 @@ ARG DOCK_PKG_DIR=/go/src/github.com/yemramirezca/http-db-service/
 ADD . $DOCK_PKG_DIR
 WORKDIR $DOCK_PKG_DIR
 RUN CGO_ENABLED=0 GOOS=linux go build  -o main .
-RUN go test ./...
+#RUN go test ./...
 
 
 FROM scratch

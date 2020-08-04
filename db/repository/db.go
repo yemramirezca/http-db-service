@@ -5,17 +5,28 @@ import (
 	"fmt"
 	log "github.com/Sirupsen/logrus"
 	"github.com/pkg/errors"
+	"github.com/yemramirezca/http-db-service/config"
 	"io"
 	"regexp"
+	"strings"
 )
 
 const (
-	insertQuery   = "INSERT INTO %s (order_id, namespace, total) VALUES ($1, $2, $3)"
-	getQuery      = "SELECT * FROM %s"
-	getNSQuery    = "SELECT * FROM %s WHERE namespace = ?"
-	deleteQuery   = "DELETE FROM %s"
-	deleteNSQuery = "DELETE FROM %s WHERE namespace = ?"
+	insertQuery         = "INSERT INTO %s (order_id, namespace, total) VALUES ($1, $2, $3)"
+	getQuery            = "SELECT * FROM %s"
+	getNSQuery          = "SELECT * FROM %s WHERE namespace = ?"
+	deleteQuery         = "DELETE FROM %s"
+	deleteNSQuery       = "DELETE FROM %s WHERE namespace = ?"
 	PrimaryKeyViolation = 2627
+	DefaultTable        = "orders"
+	TableCreationQuery  = `
+    CREATE TABLE IF NOT EXISTS {name} (
+      order_id VARCHAR(64),
+      namespace VARCHAR(64),
+      total DECIMAL(8,2),
+      PRIMARY KEY (order_id, namespace)
+    )
+`
 )
 
 type Database interface {
@@ -132,4 +143,22 @@ var safeSQLRegex = regexp.MustCompile(`[^a-zA-Z0-9\.\-_]`)
 // SanitizeSQLArg returns the input string sanitized for safe use in an SQL query as argument.
 func SanitizeSQLArg(s string) string {
 	return safeSQLRegex.ReplaceAllString(s, "")
+}
+
+func InitDb(conexionString string) (*sql.DB, error) {
+	db, err := sql.Open(config.PostgresDriverName, conexionString)
+	if err != nil {
+		return nil, errors.Wrapf(err, "while establishing connection to '%s'", config.PostgresDriverName)
+	}
+	db.Stats()
+	log.Debug("Testing connection")
+	if err := db.Ping(); err != nil {
+		return nil, errors.Wrap(err, "while testing DB connection")
+	}
+	q := strings.Replace(TableCreationQuery, "{name}", SanitizeSQLArg(DefaultTable), -1)
+	log.Debugf("Ensuring table exists. Running query: '%q'.", q)
+	if _, err := db.Exec(q); err != nil {
+		return nil, errors.Wrap(err, "while initiating DB table")
+	}
+	return db, nil
 }

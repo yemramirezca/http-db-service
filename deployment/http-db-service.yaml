@@ -46,26 +46,9 @@ spec:
           requests:
             memory: 32Mi
         env:
-        - name: dbtype
-          # available dbtypes are: [memory, mssql, cloudsqlpostgres]
-          value: "postgres"
-        - name: database
-          valueFrom:
-            secretKeyRef:
-              name: elated-ride
-              key: database_name
-        - name: host
-          valueFrom:
-            secretKeyRef:
-              name: elated-ride
-              key: host
-        - name: username
-          valueFrom:
-            secretKeyRef:
-              name: elated-ride
-              key: Username
-        - name: password
-          valueFrom:
-            secretKeyRef:
-              name: elated-ride
-              key: Password
+        - name: db-connection1
+          value: ""
+        - name: db-connection2
+          value: ""
+        - name: header-val
+          value: ""
