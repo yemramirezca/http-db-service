@@ -11,7 +11,6 @@ type Service struct {
 	Port   string `envconfig:"serviceport,default=8017" json:"Port"`
 	DBConnection1	string `envconfig:"dbconnection1`
 	DBConnection2	string `envconfig:"dbconnection2`
-	SwitchHeader	string `envconfig:"headerval,default=jason"`
 }
 
 // String returns a printable representation of the config as JSON.

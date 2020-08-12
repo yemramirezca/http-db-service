@@ -64,7 +64,12 @@ func (orderHandler Order) InsertOrder(w http.ResponseWriter, r *http.Request) {
 
 
 	log.Debugf("Inserting order: '%+v'.", order)
-	err = orderHandler.getRepository(headerVal).InsertOrder(order)
+	repo,err := orderHandler.getRepository(headerVal)
+	if err != nil {
+		response.WriteCodeAndMessage(http.StatusUnauthorized, err.Error(), w)
+		return
+	}
+	err = repo.InsertOrder(order)
 
 	switch err {
 	case nil:
@@ -82,8 +87,13 @@ func (orderHandler Order) InsertOrder(w http.ResponseWriter, r *http.Request) {
 func (orderHandler Order) GetOrders(w http.ResponseWriter, r *http.Request) {
 	headerVal := r.Header.Get(header)
 	log.Debug("Retrieving orders")
+	repo,err := orderHandler.getRepository(headerVal)
+	if err != nil {
+		response.WriteCodeAndMessage(http.StatusUnauthorized, err.Error(), w)
+		return
+	}
+	orders, err := repo.GetOrders()
 
-	orders, err := orderHandler.getRepository(headerVal).GetOrders()
 	if err != nil {
 		log.Error("Error retrieving orders.", err)
 		response.WriteCodeAndMessage(http.StatusInternalServerError, "Internal error.", w)
@@ -108,8 +118,12 @@ func (orderHandler Order) GetNamespaceOrders(w http.ResponseWriter, r *http.Requ
 	}
 
 	log.Debugf("Retrieving orders for namespace: %s\n", ns)
-
-	orders, err := orderHandler.getRepository(headerVal).GetNamespaceOrders(ns)
+	repo,err := orderHandler.getRepository(headerVal)
+	if err != nil {
+		response.WriteCodeAndMessage(http.StatusUnauthorized, err.Error(), w)
+		return
+	}
+	orders, err := repo.GetNamespaceOrders(ns)
 	if err != nil {
 		log.Error("Error retrieving orders.", err)
 		response.WriteCodeAndMessage(http.StatusInternalServerError, "Internal error.", w)
@@ -141,8 +155,13 @@ func respondOrders(orders []repository.Order, w http.ResponseWriter) error {
 func (orderHandler Order) DeleteOrders(w http.ResponseWriter, r *http.Request) {
 	headerVal := r.Header.Get(header)
 	log.Debug("Deleting all orders")
+	repo,err := orderHandler.getRepository(headerVal)
+	if err != nil {
+		response.WriteCodeAndMessage(http.StatusUnauthorized, err.Error(), w)
+		return
+	}
 
-	if err := orderHandler.getRepository(headerVal).DeleteOrders(); err != nil {
+	if err := repo.DeleteOrders(); err != nil {
 		log.Error("Error deleting orders.", err)
 		response.WriteCodeAndMessage(http.StatusInternalServerError, "Internal error.", w)
 		return
@@ -158,9 +177,13 @@ func (orderHandler Order) DeleteNamespaceOrders(w http.ResponseWriter, r *http.R
 		response.WriteCodeAndMessage(http.StatusBadRequest, "No namespace provided.", w)
 		return
 	}
-
+	repo,err := orderHandler.getRepository(headerVal)
+	if err != nil {
+		response.WriteCodeAndMessage(http.StatusUnauthorized, err.Error(), w)
+		return
+	}
 	log.Debugf("Deleting orders in namespace %s\n", ns)
-	if err := orderHandler.getRepository(headerVal).DeleteNamespaceOrders(ns); err != nil {
+	if err := repo.DeleteNamespaceOrders(ns); err != nil {
 		log.Errorf("Deleting orders in namespace %s\n. %s", ns, err)
 		response.WriteCodeAndMessage(http.StatusInternalServerError, "Internal error.", w)
 		return
@@ -169,10 +192,6 @@ func (orderHandler Order) DeleteNamespaceOrders(w http.ResponseWriter, r *http.R
 }
 
 
-func (orderHandler Order) getRepository(header string) *repository.OrderRepositorySQL {
-	if header == orderHandler.serviceConfig.SwitchHeader {
-		return &orderHandler.repository1
-	} else {
-		return &orderHandler.repository2
-	}
+func (orderHandler Order) getRepository(header string) (*repository.OrderRepositorySQL, error) {
+	return &orderHandler.repository2, nil
 }
