@@ -46,13 +46,13 @@ func addOrderHandlers(router *mux.Router, cfg config.Service) {
 	orderHandler := handler.NewOrderHandler(cfg)
 
 	// orders
-	router.HandleFunc("/orders", orderHandler.InsertOrder).Methods(http.MethodPost)
+	router.HandleFunc("/p1/orders", orderHandler.InsertOrder).Methods(http.MethodPost)
 
-	router.HandleFunc("/orders", orderHandler.GetOrders).Methods(http.MethodGet)
-	router.HandleFunc("/namespace/{namespace}/orders", r.GetNamespaceOrders).Methods(http.MethodGet)
+	router.HandleFunc("/p1/orders", orderHandler.GetOrders).Methods(http.MethodGet)
+	router.HandleFunc("/p1/namespace/{namespace}/orders", r.GetNamespaceOrders).Methods(http.MethodGet)
 
-	router.HandleFunc("/orders", orderHandler.DeleteOrders).Methods(http.MethodDelete)
-	router.HandleFunc("/namespace/{namespace}/orders", orderHandler.DeleteNamespaceOrders).Methods(http.MethodDelete)
+	router.HandleFunc("/p1/orders", orderHandler.DeleteOrders).Methods(http.MethodDelete)
+	router.HandleFunc("/p1/namespace/{namespace}/orders", orderHandler.DeleteNamespaceOrders).Methods(http.MethodDelete)
 }
 
 func addEventsHandler(router *mux.Router) {
@@ -62,8 +62,8 @@ func addEventsHandler(router *mux.Router) {
 
 func addAPIHandler(router *mux.Router) {
 	// API
-	router.HandleFunc("/", handler.SwaggerAPIRedirectHandler).Methods(http.MethodGet)
-	router.HandleFunc("/api.yaml", handler.SwaggerAPIHandler).Methods(http.MethodGet)
+	router.HandleFunc("/p1", handler.SwaggerAPIRedirectHandler).Methods(http.MethodGet)
+	router.HandleFunc("/p1/api.yaml", handler.SwaggerAPIHandler).Methods(http.MethodGet)
 }
 
 func startService(port string, router *mux.Router) error {
