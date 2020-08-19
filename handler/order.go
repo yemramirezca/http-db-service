@@ -15,7 +15,8 @@ import (
 )
 
 const defaultNamespace = "default"
-const header = "end-user"
+const header = "user"
+const user = "jason"
 
 // Order is used to expose the Order service's basic operations using the HTTP route handler methods which extend it.
 type Order struct {
@@ -63,7 +64,7 @@ func (orderHandler Order) InsertOrder(w http.ResponseWriter, r *http.Request) {
 	}
 
 
-	log.Debugf("Inserting order: '%+v'.", order)
+	log.Printf("Inserting order: '%+v'.", order)
 	repo,err := orderHandler.getRepository(headerVal)
 	if err != nil {
 		response.WriteCodeAndMessage(http.StatusUnauthorized, err.Error(), w)
@@ -86,7 +87,7 @@ func (orderHandler Order) InsertOrder(w http.ResponseWriter, r *http.Request) {
 // The orders list is marshalled in JSON format and sent to the `http.ResponseWriter`
 func (orderHandler Order) GetOrders(w http.ResponseWriter, r *http.Request) {
 	headerVal := r.Header.Get(header)
-	log.Debug("Retrieving orders")
+	log.Printf("Retrieving orders")
 	repo,err := orderHandler.getRepository(headerVal)
 	if err != nil {
 		response.WriteCodeAndMessage(http.StatusUnauthorized, err.Error(), w)
@@ -117,7 +118,7 @@ func (orderHandler Order) GetNamespaceOrders(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	log.Debugf("Retrieving orders for namespace: %s\n", ns)
+	log.Printf("Retrieving orders for namespace: %s\n", ns)
 	repo,err := orderHandler.getRepository(headerVal)
 	if err != nil {
 		response.WriteCodeAndMessage(http.StatusUnauthorized, err.Error(), w)
@@ -154,7 +155,7 @@ func respondOrders(orders []repository.Order, w http.ResponseWriter) error {
 // DeleteOrders handles an http request for deleting all Orders from all namespaces.
 func (orderHandler Order) DeleteOrders(w http.ResponseWriter, r *http.Request) {
 	headerVal := r.Header.Get(header)
-	log.Debug("Deleting all orders")
+	log.Printf("Deleting all orders")
 	repo,err := orderHandler.getRepository(headerVal)
 	if err != nil {
 		response.WriteCodeAndMessage(http.StatusUnauthorized, err.Error(), w)
@@ -182,7 +183,7 @@ func (orderHandler Order) DeleteNamespaceOrders(w http.ResponseWriter, r *http.R
 		response.WriteCodeAndMessage(http.StatusUnauthorized, err.Error(), w)
 		return
 	}
-	log.Debugf("Deleting orders in namespace %s\n", ns)
+	log.Printf("Deleting orders in namespace %s\n", ns)
 	if err := repo.DeleteNamespaceOrders(ns); err != nil {
 		log.Errorf("Deleting orders in namespace %s\n. %s", ns, err)
 		response.WriteCodeAndMessage(http.StatusInternalServerError, "Internal error.", w)
@@ -193,5 +194,8 @@ func (orderHandler Order) DeleteNamespaceOrders(w http.ResponseWriter, r *http.R
 
 
 func (orderHandler Order) getRepository(header string) (*repository.OrderRepositorySQL, error) {
+	if header == user {
+		return &orderHandler.repository1, nil
+	}
 	return &orderHandler.repository2, nil
 }

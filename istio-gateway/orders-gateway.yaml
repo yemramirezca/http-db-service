@@ -1,7 +1,7 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
-  name: orders-gateway
+  name: orders-poc2-gateway
 spec:
   selector:
     istio: ingressgateway # use istio default controller
