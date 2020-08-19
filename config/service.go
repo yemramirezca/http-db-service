@@ -8,9 +8,8 @@ import (
 // Service struct is used for configuring how the service will run
 // by reading the values from the environment or using the default values.
 type Service struct {
-	Port   string `envconfig:"serviceport,default=8017" json:"Port"`
-	DBConnection1	string `envconfig:"dbconnection1`
-	DBConnection2	string `envconfig:"dbconnection2`
+	Port         string `envconfig:"serviceport,default=8017" json:"Port"`
+	DBConnection string `envconfig:"dbconnection`
 }
 
 // String returns a printable representation of the config as JSON.

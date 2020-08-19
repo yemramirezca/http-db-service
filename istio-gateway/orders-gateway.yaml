@@ -1,14 +1,14 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
-  name: orders-gateway
+  name: orders-poc1-gateway
 spec:
   selector:
     istio: ingressgateway # use istio default controller
   servers:
   - port:
       number: 80
-      name: http
+      name: http-wildcard
       protocol: HTTP
     hosts:
     - "*"

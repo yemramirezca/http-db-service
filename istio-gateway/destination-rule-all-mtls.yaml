@@ -1,9 +1,9 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
-  name: orders
+  name: orders-poc1
 spec:
-  host: http-db-service
+  host: http-db-service-poc1
   trafficPolicy:
     tls:
       mode: ISTIO_MUTUAL

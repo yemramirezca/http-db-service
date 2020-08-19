@@ -1,51 +1,51 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: http-db-service
+  name: http-db-service-poc1
   labels:
-    example: http-db-service
-    app: http-db-service
+    example: http-db-service-poc1
+    app: http-db-service-poc1
 spec:
   ports:
   - name: http
     port: 8017
   selector:
-    app: http-db-service
-    example: http-db-service
+    app: http-db-service-poc1
+    example: http-db-service-poc1
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: http-db-service-orders
+  name: http-db-service-poc1-orders
   labels:
     account: orders
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: http-db-service-1
+  name: http-db-service-poc1-1
   labels:
-    example: http-db-service
-    app: http-db-service
+    example: http-db-service-poc1
+    app: http-db-service-poc1
     version: v1
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: http-db-service
-      example: http-db-service
+      app: http-db-service-poc1
+      example: http-db-service-poc1
       version: v1
   template:
     metadata:
       labels:
-        app: http-db-service
-        example: http-db-service
+        app: http-db-service-poc1
+        example: http-db-service-poc1
         version: v1
     spec:
-      serviceAccountName: http-db-service-orders
+      serviceAccountName: http-db-service-poc1-orders
       containers:
       # replace the repository URL with your own repository (e.g. {DockerID}/http-db-service:0.0.x for Docker Hub).
-      - image: yemramirezca/http-db-service:jason
+      - image: yemramirezca/http-db-service:1.7
         imagePullPolicy: IfNotPresent
         name: http-db-service
         ports:
@@ -57,37 +57,35 @@ spec:
           requests:
             memory: 32Mi
         env:
-        - name: dbconnection1
+        - name: dbconnection
           value: "host=35.202.74.137 dbname=kyma-mario-poc user=postgres password=postgres sslmode=disable"
-        - name: dbconnection2
-          value: "host=35.202.74.137 dbname=kyma-mario-poc-2 user=postgres password=postgres sslmode=disable"
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: http-db-service-2
+  name: http-db-service-poc1-2
   labels:
-    example: http-db-service
-    app: http-db-service
+    example: http-db-service-poc1
+    app: http-db-service-poc1
     version: v2
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: http-db-service
-      example: http-db-service
+      app: http-db-service-poc1
+      example: http-db-service-poc1
       version: v2
   template:
     metadata:
       labels:
-        app: http-db-service
-        example: http-db-service
+        app: http-db-service-poc1
+        example: http-db-service-poc1
         version: v2
     spec:
-      serviceAccountName: http-db-service-orders
+      serviceAccountName: http-db-service-poc1-orders
       containers:
         # replace the repository URL with your own repository (e.g. {DockerID}/http-db-service:0.0.x for Docker Hub).
-        - image: yemramirezca/http-db-service:freddy
+        - image: yemramirezca/http-db-service:1.7
           imagePullPolicy: IfNotPresent
           name: http-db-service
           ports:
@@ -99,7 +97,5 @@ spec:
             requests:
               memory: 32Mi
           env:
-            - name: dbconnection1
-              value: "host=35.202.74.137 dbname=kyma-mario-poc user=postgres password=postgres sslmode=disable"
-            - name: dbconnection2
-              value: "host=35.202.74.137 dbname=kyma-mario-poc-2 user=postgres password=postgres sslmode=disable"
+          - name: dbconnection
+            value: "host=35.202.74.137 dbname=kyma-mario-poc-2 user=postgres password=postgres sslmode=disable"
